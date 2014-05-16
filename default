@@ -4,7 +4,7 @@ server {
     charset utf-8;
 
     index index.html index.php;
-    root /var/www;
+    root /var/www/$webpublic;
     # Make site accessible from http://localhost/
     server_name localhost;
 
@@ -30,7 +30,8 @@ server {
         fastcgi_index index.php;
         include fastcgi_params;
     }
+
     location ~* ^/(css|img|js|flv|swf|download)/(.+)$ {
-        root /var/www;
+        root /var/www/$webpublic;
     }
 }
