@@ -1,37 +1,35 @@
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server ipv6only=on;
-    charset utf-8;
 
-    index index.html index.php;
-    root /var/www/$webpublic;
-    # Make site accessible from http://localhost/
-    server_name localhost;
+    listen   80;
+    server_name localhost.dev;
 
-    location / {
-        index  index.php index.html index.htm;
+    index index.php index.html index.htm;
+    set $root_path '/var/www/$webpublic';
+    root $root_path;
 
-        # if file exists return it right away
-        if (-f $request_filename) {
-            break;
-        }
+    try_files $uri $uri/ @rewrite;
 
-        # otherwise rewrite it
-        if (!-e $request_filename) {
-            rewrite ^(.+)$ /index.php?_url=/$1 last;
-            break;
-        }
-    }
-
-    location ~ \.php$ {
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass unix:/var/run/php5-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_index index.php;
-        include fastcgi_params;
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?_url=/$1;
     }
 
     location ~* ^/(css|img|js|flv|swf|download)/(.+)$ {
-        root /var/www/$webpublic;
+        root $root_path;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    location ~ \.php$ {
+        fastcgi_index /index.php;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+
+        include fastcgi_params;
+        fastcgi_split_path_info       ^(.+\.php)(/.+)$;
+        fastcgi_param PATH_INFO       $fastcgi_path_info;
+        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
     }
 }
