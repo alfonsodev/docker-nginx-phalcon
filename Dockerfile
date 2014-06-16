@@ -12,6 +12,10 @@ RUN echo 'extension=phalcon.so' >> /etc/php5/cli/conf.d/30-phalcon.ini
 
 ADD nginx.conf /etc/nginx/nginx.conf
 ADD default /etc/nginx/sites-available/default
+ADD default-ssl /etc/nginx/sites-enabled/default-ssl
+
+ADD server.crt /etc/nginx/ssl/
+ADD server.key /etc/nginx/ssl/
 
 EXPOSE 80
 
