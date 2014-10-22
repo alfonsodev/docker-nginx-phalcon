@@ -1,5 +1,6 @@
 FROM ubuntu
 RUN apt-get update
+RUN sudo apt-get install -y openjdk-7-jre
 RUN apt-get -y install git nginx nginx-extras php5-dev php5-fpm libpcre3-dev gcc make php5-mysql
 RUN mkdir /var/www
 RUN echo "<?php phpinfo(); ?>" > /var/www/index.php
