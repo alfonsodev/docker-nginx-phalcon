@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:14.04
 RUN apt-get update
 RUN apt-get -y install git nginx nginx-extras php5-dev php5-fpm libpcre3-dev gcc make php5-mysql
 RUN mkdir /var/www
